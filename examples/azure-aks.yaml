@@ -3,7 +3,7 @@ kind: ClusterClaim
 metadata:
   name: a-team-aks
   labels:
-    cluster-owner: vfarcic
+    cluster-owner: bmutziu
 spec:
   id: ateamaks
   compositionSelector:
