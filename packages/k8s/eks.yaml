@@ -301,6 +301,7 @@ spec:
           region: us-east-1
           cidrBlock: 10.0.0.0/16
           enableDnsSupport: true
+          enableDnsHostNames: true
     patches:
     - fromFieldPath: spec.id
       toFieldPath: metadata.name
@@ -315,13 +316,21 @@ spec:
           region: us-east-1
           vpcIdSelector:
             matchControllerRef: true
-          egress:
-          - fromPort: 0
-            toPort: 0
-            ipProtocol: "-1"
+          ingress:
+          - fromPort: 5432
+            toPort: 5432
+            ipProtocol: tcp
             ipRanges:
             - cidrIp: "0.0.0.0/0"
+          egress:
+          - fromPort: -1
+            toPort: -1
+            ipProtocol: "-1"
+            ipRanges:
+            - cidrIp: 0.0.0.0/0
     patches:
+    - fromFieldPath: spec.id
+      toFieldPath: metadata.labels[devopstoolkitseries.com/app]
     - fromFieldPath: spec.id
       toFieldPath: metadata.name
     readinessChecks:
@@ -481,7 +490,7 @@ spec:
           chart:
             name: ingress-nginx
             repository: https://kubernetes.github.io/ingress-nginx
-            version: "4.0.18"
+            version: "4.1.4"
           values:
             controller:
               ingressClassResource:
@@ -510,7 +519,7 @@ spec:
           chart:
             name: crossplane
             repository: https://charts.crossplane.io/stable
-            version: "1.6.0"
+            version: "1.8.1"
     patches:
     - fromFieldPath: spec.id
       toFieldPath: metadata.name
@@ -554,7 +563,7 @@ spec:
             metadata:
               name: crossplane-provider-aws
             spec:
-              package: crossplane/provider-aws:v0.24.1
+              package: crossplane/provider-aws:v0.28.1
     patches:
     - fromFieldPath: spec.id
       toFieldPath: metadata.name
@@ -738,7 +747,7 @@ spec:
             metadata:
               name: crossplane-provider-helm
             spec:
-              package: crossplane/provider-helm:v0.9.0
+              package: crossplane/provider-helm:v0.10.0
               controllerConfigRef:
                 name: provider-kubernetes
     patches:
@@ -762,7 +771,7 @@ spec:
             metadata:
               name: provider-sql
             spec:
-              package: crossplane/provider-sql:v0.4.1
+              package: crossplane/provider-sql:v0.5.0
     patches:
     - fromFieldPath: spec.id
       toFieldPath: metadata.name
@@ -828,7 +837,7 @@ spec:
             metadata:
               name: crossplane-sql
             spec:
-              package: vfarcic/crossplane-sql:v0.2.18
+              package: vfarcic/crossplane-sql:v0.3.2
     patches:
     - fromFieldPath: spec.id
       toFieldPath: metadata.name
